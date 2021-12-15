@@ -17,7 +17,7 @@ class IsseCopter(AbstractVirtualCapability):
         return {"Position3D": self.ISSECopterPosition}
 
     def FlyToPosition(self, params: dict) -> dict:
-        formatPrint(f"Flying to position {params}")
+        formatPrint(self, f"Flying to position {params}")
         return self.SetISSECopterPosition(params)
 
     def loop(self):

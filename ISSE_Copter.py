@@ -3,7 +3,7 @@ import sys
 from threading import Thread
 from time import sleep
 
-from AbstractVirtualCapability import AbstractVirtualCapability, VirtualCapabilityServer
+from AbstractVirtualCapability import AbstractVirtualCapability, VirtualCapabilityServer, formatPrint
 
 class IsseCopter(AbstractVirtualCapability):
     def __init__(self, server):

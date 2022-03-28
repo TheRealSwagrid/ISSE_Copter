@@ -12,12 +12,14 @@ class IsseCopter(AbstractVirtualCapability):
 
     def SetISSECopterPosition(self, params: dict) -> dict:
         #TODO Rossi Job.
+        p = params["Position3D"]
+        formatPrint(self, f"Flying To {p}")
         sleep(5)
+        self.ISSECopterPosition = params["Position3D"]
         return self.GetISSECopterPosition(params)
 
     def GetISSECopterPosition(self, params: dict) -> dict:
         # TODO Rossi Job.
-        self.ISSECopterPosition = params["Position3D"]
         return {"Position3D": self.ISSECopterPosition}
 
     def FlyToPosition(self, params: dict) -> dict:

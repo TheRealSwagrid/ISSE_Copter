@@ -14,7 +14,7 @@ class IsseCopter(AbstractVirtualCapability):
         #TODO Rossi Job.
         p = params["Position3D"]
         #formatPrint(self, f"Flying To {p}")
-        sleep(5)
+        sleep(.5)
         self.ISSECopterPosition = params["Position3D"]
         return self.GetISSECopterPosition(params)
 

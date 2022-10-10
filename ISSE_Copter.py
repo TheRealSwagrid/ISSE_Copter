@@ -10,6 +10,7 @@ class IsseCopter(AbstractVirtualCapability):
         super().__init__(server)
         self.ISSECopterPosition = [0., 0., 0.]
 
+
     def SetISSECopterPosition(self, params: dict) -> dict:
         #TODO Rossi Job.
         p = params["Position3D"]

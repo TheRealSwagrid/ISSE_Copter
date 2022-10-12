@@ -4,7 +4,7 @@ SHELL ["/bin/bash", "-c"]
 
 RUN mkdir -p /ros_ws/src/
 
-COPY ros_ws/src/rospkg/ISSE_Copter.py /ros_ws/src/
+COPY ISSE_Copter.py /ros_ws/src/
 COPY ros_ws/src/rospkg/AbstractVirtualCapability.py /ros_ws/src/
 COPY requirements /var
 

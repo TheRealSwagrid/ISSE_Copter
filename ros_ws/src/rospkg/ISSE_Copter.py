@@ -27,6 +27,7 @@ class IsseCopter(AbstractVirtualCapability):
         p = params["Position3D"]
         if self.functionality["SetISSECopterPosition"] is not None:
             self.functionality["SetISSECopterPosition"](p)
+        self.ISSECopterPosition = params["Position3D"]
         return self.GetISSECopterPosition(params)
 
     def GetISSECopterPosition(self, params: dict) -> dict:

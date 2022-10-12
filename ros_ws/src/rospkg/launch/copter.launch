@@ -5,11 +5,12 @@
     <include file="$(find vrpn_client_ros)/launch/sample.launch">
     		<arg name="server" value="172.20.37.251" />
   	</include>
+
     <include file="$(find isse_recht_basic)/launch/drone.launch">
 		<arg name="mav_id" value="$(arg mav_id)" />
 	</include>
-    
-    <node pkg="rospkg" type="ISSE_Copter.py" name="copter_node_$(arg mav_id)">
+
+    <node pkg="rospkg" type="ISSE_Copter_Ros.py" name="copter_node_$(arg mav_id)">
 		<param name="mav_id" value="$(arg mav_id)" />
 		<param name="target" value="aq_$(arg mav_id)/target"/>
 		<param name="world" value="$(arg vicon_map)"/>

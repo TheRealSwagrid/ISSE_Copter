@@ -1,0 +1,54 @@
+<launch>
+  	<arg name="mav_id" default="75" />
+
+	<!--aq_and_vrpn & aq_for_vrpn -->
+	<arg name="copter_frame" value="aq_$(arg mav_id)/position"/>
+	<arg name="copter_map" value="aq_$(arg mav_id)/map"/>
+	<arg name="copter_target" value="aq_$(arg mav_id)/target"/>
+	<arg name="vicon_frame" value="aq_$(arg mav_id)"/>
+	<arg name="vicon_map" value="world"/>
+
+  	<arg name="fcu_url" value="udp-b://0.0.0.0:14555@172.20.38.$(arg mav_id):14550"/>
+	<arg name="tgt_system" value="$(arg mav_id)" />
+
+	<!--swarm-->
+	<arg name="swarm_namespace" default="swarm"/>
+	<param name="$(arg swarm_namespace)/$(arg vicon_frame)" value="$(arg copter_target)"/>
+
+	<!--aq_posvel-->
+	<arg name="gcs_url" default="" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+	<arg name="fcu_protocol" default="v1.0" />
+	<arg name="respawn_mavros" default="false" />
+
+	<group ns="aq_$(arg mav_id)">
+		<!--mavros stuff-->
+		<include file="$(find mavros)/launch/node.launch">
+			<arg name="pluginlists_yaml" value="$(find autoquad)/launch/aq_pluginlist.yaml" />
+			<arg name="config_yaml" value="$(find autoquad)/launch/aq_config.yaml" />
+
+			<arg name="fcu_url" value="$(arg fcu_url)" />
+			<arg name="gcs_url" value="$(arg gcs_url)" />
+			<arg name="tgt_system" value="$(arg tgt_system)" />
+			<arg name="tgt_component" value="$(arg tgt_component)" />
+			<arg name="log_output" value="$(arg log_output)" />
+			<arg name="fcu_protocol" value="$(arg fcu_protocol)" />
+			<arg name="respawn_mavros" default="$(arg respawn_mavros)" />
+		</include>
+
+		<!-- convert vicon positions to our local positions-->
+		<node pkg="autoquad" type="autoquad_vicon_bridge.py" name="autoquad_vicon_bridge">
+			<param name="copter_frame" value="$(arg copter_frame)"/>
+			<param name="copter_map" value="$(arg copter_map)"/>
+			<param name="vicon_frame" value="$(arg vicon_frame)"/>
+			<param name="vicon_map" value="$(arg vicon_map)"/>
+		</node>
+
+		<!-- convert target tf frames to mavlink msgs-->
+		<node pkg="autoquad" type="autoquad_pos_vel_target.py" name="autoquad_pos_vel_target">
+			<param name="copter_target" value="$(arg copter_target)"/>
+			<param name="copter_map" value="$(arg copter_map)"/>
+		</node>
+	</group>
+</launch>

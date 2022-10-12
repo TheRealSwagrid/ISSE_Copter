@@ -1,0 +1,5 @@
+rospkg
+/home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/.private/rospkg/cmake.lock /home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/./cmake.lock
+/home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/.private/rospkg/lib/pkgconfig/rospkg.pc /home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/lib/pkgconfig/rospkg.pc
+/home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/.private/rospkg/share/rospkg/cmake/rospkgConfig.cmake /home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/share/rospkg/cmake/rospkgConfig.cmake
+/home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/.private/rospkg/share/rospkg/cmake/rospkgConfig-version.cmake /home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/share/rospkg/cmake/rospkgConfig-version.cmake

@@ -1,0 +1,29 @@
+<launch>
+  	<arg name="mav_id" default="75" />
+  	<arg name="wand" default="Wand" />
+
+	<include file="$(find vrpn_client_ros)/launch/sample.launch">
+    		<arg name="server" value="172.16.1.6" />
+  	</include>
+
+	<group ns="aq_$(arg mav_id)">
+		<arg name="tgt_system" value="$(arg mav_id)" />
+		<arg name="copter_target" value="aq_$(arg mav_id)/target"/>
+		<arg name="vicon_map" value="world"/>
+		<arg name="copter_frame" value="aq_$(arg mav_id)/position"/>
+
+		<include file="$(find isse_recht_basic)/launch/drone.launch">
+			<arg name="mav_id" value="$(arg mav_id)" />
+		</include>
+
+		<!-- finally start our own node -->
+	 	<node pkg="isse_recht_basic" type="wand_control.py" name="copter_node_$(arg mav_id)">
+			<param name="mav_id" value="$(arg tgt_system)" />
+	  		<param name="target" value="$(arg copter_target)"/>
+			<param name="world" value="$(arg vicon_map)"/>
+	      	<param name="position" value="$(arg copter_frame)"/>
+	      	<param name="wand" value="$(arg wand)Goal"/>
+	 	</node>
+	</group>
+	<node pkg="tf" type="static_transform_publisher" name="goal_broadcaster" args="0 0 0.6 0 0 0 1 $(arg wand) $(arg wand)Goal 100" />
+</launch>

@@ -2,8 +2,10 @@ FROM osrf/ros:noetic-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
-COPY ISSE_Copter.py /var
-COPY AbstractVirtualCapability.py /var
+RUN mkdir -p /ros_ws/src/
+
+COPY ros_ws/src/rospkg/ISSE_Copter.py /ros_ws/src/
+COPY ros_ws/src/rospkg/AbstractVirtualCapability.py /ros_ws/src/
 COPY requirements /var
 
 RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'

@@ -1,0 +1,22 @@
+<launch>
+  	<arg name="mav_id" default="75" />
+	<arg name="vicon_map" value="world"/>
+
+	<include file="$(find vrpn_client_ros)/launch/sample.launch">
+    		<arg name="server" value="172.20.37.251" />
+  	</include>
+
+	<include file="$(find isse_recht_basic)/launch/drone.launch">
+		<arg name="mav_id" value="$(arg mav_id)" />
+	</include>
+
+	<node pkg="isse_recht_basic" type="collision_avoidance.py" name="collision_avoidance"/>
+
+	<!-- finally start our own node -->
+	<node pkg="isse_recht_basic" type="up_down_node.py" name="copter_node_$(arg mav_id)">
+		<param name="mav_id" value="$(arg mav_id)" />
+		<param name="target" value="aq_$(arg mav_id)/target"/>
+		<param name="world" value="$(arg vicon_map)"/>
+		<param name="position" value="aq_$(arg mav_id)/position"/>
+	</node>
+</launch>

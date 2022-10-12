@@ -1,0 +1,22 @@
+<launch>
+  	<arg name="mav_id" default="75" />
+	<arg name="vicon_map" value="world"/>
+
+	<include file="$(find vrpn_client_ros)/launch/sample.launch">
+    		<arg name="server" value="172.20.37.251" />
+  	</include>
+
+	<!--swarm-->
+	<arg name="swarm_namespace" default="swarm"/>
+	<param name="$(arg swarm_namespace)/aq_$(arg mav_id)" value="aq_$(arg mav_id)/target"/>
+	<param name="$(arg swarm_namespace)/aq_75" value="aq_75/target"/>
+	<param name="$(arg swarm_namespace)/aq_47" value="aq_47/target"/>
+
+	<node pkg="isse_recht_basic" type="collision_avoidance.py" name="collision_avoidance">
+		<param name="swarm_namespace" value="$(arg swarm_namespace)"/>
+		<param name="world" value="$(arg vicon_map)"/>
+	</node>
+
+    <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="1 -1 0.2 0 0 0 1 world aq_75/target 10" />
+    <node pkg="tf" type="static_transform_publisher" name="link2_broadcaster" args="-1 1 0.2 0 0 0 1 world aq_215/target 10" />
+</launch>

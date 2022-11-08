@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import signal
+import sys
 
 from AbstractVirtualCapability import AbstractVirtualCapability, VirtualCapabilityServer, formatPrint
 
@@ -11,6 +12,7 @@ class IsseCopter(AbstractVirtualCapability):
         self.functionality = {"arm": None, "disarm": None, "SetISSECopterPosition": None, "GetISSECopterPosition": None, "GetArmingStatus" : None}
 
     def SetArmingStatus(self, params: dict):
+        formatPrint(self, f"Set Arming Status to {params}")
         p = params["SimpleBooleanParameter"]
         if p and self.functionality["arm"] is not None:
             self.functionality["arm"]()
@@ -25,6 +27,7 @@ class IsseCopter(AbstractVirtualCapability):
 
     def SetISSECopterPosition(self, params: dict) -> dict:
         p = params["Position3D"]
+        print(f"Flying to {p}")
         if self.functionality["SetISSECopterPosition"] is not None:
             self.functionality["SetISSECopterPosition"](p)
         return self.GetISSECopterPosition(params)
@@ -50,8 +53,12 @@ if __name__ == '__main__':
         listener.kill()
         quit(1)
 
+
     try:
-        server = VirtualCapabilityServer()
+        port = None
+        if len(sys.argv[1:]) > 0:
+            port = int(sys.argv[1])
+        server = VirtualCapabilityServer(port)
         listener = IsseCopter(server)
         listener.start()
         signal.signal(signal.SIGTERM, handler)

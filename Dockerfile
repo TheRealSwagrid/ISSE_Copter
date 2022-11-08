@@ -2,29 +2,37 @@ FROM osrf/ros:noetic-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
-ADD ros_ws ~/.
-COPY ISSE_Copter.py ~/ros_ws/src/rospkg/src/
-COPY AbstractVirtualCapability.py /ros_ws/src/rospkg/src/
-# COPY requirements /var
-
+# ROS-Noetic Setup
 RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-get update && apt-get install -y curl
 RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 #RUN sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN sudo apt-get update
-RUN apt-get update && apt-get install -y ros-noetic-desktop-full python3-rosinstall python3-rosinstall-generator python3-wstool build-essential python3-rosdep
-RUN apt-get update && apt-get install -y python3-pip git
-RUN pip install playsound
+RUN apt-get update && apt-get install -y ros-noetic-desktop-full python3-rosinstall python3-rosinstall-generator python3-wstool build-essential ros-noetic-mavros python3-rosdep python3-catkin-tools ros-noetic-vrpn-client-ros
+RUN apt-get update && apt-get install -y python-is-python3 python3-pip git iputils-ping
+RUN pip install playsound future pyyaml
 RUN sudo /opt/ros/noetic/lib/mavros/install_geographiclib_datasets.sh
+#RUN sudo /ros_ws/src/mavros/mavros/scripts/install_geographiclib_datasets.sh
 RUN rosdep update
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 RUN source ~/.bashrc
 
-RUN mkdir -p ~/catkin_ws/src
+# Add Files
+ADD ros_ws /ros_ws
+COPY protocols /etc
+COPY ISSE_Copter.py ros_ws/src/rospkg
+COPY AbstractVirtualCapability.py ros_ws/src/rospkg
+COPY requirements /var
 
-RUN source /opt/ros/noetic/setup.bash && cd ~/ros_ws && catkin build
-RUN source ~/ros_ws/devel/setup.bash
+# Build Ros-Pkg and build
+RUN cd /ros_ws && source /opt/ros/noetic/setup.bash && catkin build
+#RUN source /ros_ws/devel/setup.bash
 
-EXPOSE 9999
-CMD roslaunch rospkg copter.launch
+#Setup Env
+EXPOSE 9999 3883 11311 14555 14550
+ENTRYPOINT ["/ros_entrypoint.sh"]
+#RUN apt-get update && apt-get install -y  screen
+
+#Start Copter
+CMD source /ros_ws/devel/setup.bash && roslaunch rospkg copter.launch mav_id:=157
 #CMD bash

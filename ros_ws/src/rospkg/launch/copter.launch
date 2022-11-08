@@ -16,4 +16,5 @@
 		<param name="world" value="$(arg vicon_map)"/>
 		<param name="position" value="aq_$(arg mav_id)/position"/>
 	</node>
+
 </launch>

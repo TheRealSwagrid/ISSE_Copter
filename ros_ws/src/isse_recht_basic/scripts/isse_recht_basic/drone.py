@@ -66,14 +66,6 @@ class Drone:
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as error:
             rospy.logwarn(error)
 
-    def get_position(self):
-        try:
-            current = self.tfBuffer.lookup_transform(self.world_str, self.position_str, rospy.Time())
-            return current
-        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as error:
-            rospy.logwarn(error)
-            return None
-
     def _add_waypoint(self, transform: geometry_msgs.msg.Transform):
         self.waypoint_queue.append(transform)
 
@@ -98,6 +90,14 @@ class Drone:
     # flies to a point in global coordinate system
     def fly_to_pos(self, position: geometry_msgs.msg.Transform):
         self.fly_to(position.translation.x, position.translation.y, position.translation.z)
+
+    def get_position(self):
+        try:
+            current = self.tfBuffer.lookup_transform(self.world_str, self.position_str, rospy.Time())
+            return current
+        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as error:
+            rospy.logwarn(error)
+            return None
 
     # mostly copied from first demo
     # runs in background and publishes targets while limiting speed (hopefully)

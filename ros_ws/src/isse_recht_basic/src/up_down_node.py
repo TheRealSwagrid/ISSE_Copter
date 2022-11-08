@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import rospy
 
-from ros_ws.src.rospkg.drone import Drone
+from isse_recht_basic.drone import Drone
 from time import sleep
 
 

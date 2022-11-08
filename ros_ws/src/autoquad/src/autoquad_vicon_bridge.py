@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
         i = i + 1
         if i == 50:
-            rospy.loginfo("Still sending mocap position to copter...")
+            rospy.logwarn("Still sending mocap position to copter...")
             i = 0
         # print trans
         msg = geometry_msgs.msg.PoseStamped()

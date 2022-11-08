@@ -11,7 +11,7 @@
   	<arg name="fcu_url" value="udp-b://0.0.0.0:14555@172.20.38.$(arg mav_id):14550"/>
 	<arg name="tgt_system" value="$(arg mav_id)" />
 
-	<!--swarm-->
+	<!--register in swarm-->
 	<arg name="swarm_namespace" default="swarm"/>
 	<param name="$(arg swarm_namespace)/$(arg vicon_frame)" value="$(arg copter_target)"/>
 

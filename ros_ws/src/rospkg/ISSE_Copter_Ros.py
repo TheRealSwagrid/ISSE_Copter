@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import math
 import signal
+from time import sleep
 
 import rospy
-from drone import Drone
+from isse_recht_basic.drone import Drone
 from AbstractVirtualCapability import VirtualCapabilityServer
 from ISSE_Copter import IsseCopter
 
@@ -18,28 +19,37 @@ class ISSE_Copter_Ros:
         self.armed = False
 
     def fly_to(self, p):
+        rospy.logwarn(f"ISSE_ROS: Flying to {p}")
         self.copter.fly_to(p[0], p[1], p[2])
         pos = self.copter.get_position()
         pos = [pos.transform.translation.x, pos.transform.translation.y, pos.transform.translation.z]
         distance = math.sqrt((p[0] - pos[0]) ** 2 + (p[1] - pos[1]) ** 2 + (p[2] - pos[2]) ** 2)
 
-        rospy.logwarn(f"drone {self.mav_id} flying to {p}")
-        while distance > 0.15:
+        #rospy.logwarn(f"drone {self.mav_id} flying to {p}")
+        i = 0
+        while distance > 0.25:
             pos = self.copter.get_position()
             pos = [pos.transform.translation.x, pos.transform.translation.y, pos.transform.translation.z]
+            if i % 10 == 0:
+                rospy.logwarn(f"ISSE_ROS at position:  {pos}, trying to get to  {p}")
+                i = 0
             distance = math.sqrt((p[0] - pos[0]) ** 2 + (p[1] - pos[1]) ** 2 + (p[2] - pos[2]) ** 2)
-            #  rospy.logwarn(f"drone {self.mav_id} distance to {p}: {distance}")
-        rospy.logwarn(f"drone {self.mav_id} reached {p}")
+            i+=1
+        rospy.logwarn(f"drone {self.mav_id} arrived at {p}: {distance}")
+        #rospy.logwarn(f"drone {self.mav_id} reached {p}")
 
     def get_position(self):
+        rospy.logwarn(f"ISSE_ROS: get Position")
         current = self.copter.get_position()
         return [current.transform.translation.x, current.transform.translation.y, current.transform.translation.z]
 
     def arm(self):
+        rospy.logwarn(f"ISSE_ROS: Arming")
         self.copter.arm()
         self.armed = True
 
     def disarm(self):
+        rospy.logwarn(f"ISSE_ROS: Disarming")
         self.copter.disarm()
         self.armed = False
 
@@ -48,40 +58,30 @@ class ISSE_Copter_Ros:
 
 
 if __name__ == '__main__':
-    # Needed for properly closing when process is being stopped with SIGTERM signal
-    def handler(signum, frame):
-        print("[Main] Received SIGTERM signal")
-        copter.kill()
-        quit(1)
+    rospy.init_node('rosnode')
+    rate = rospy.Rate(20)
 
-    try:
-        rospy.init_node('rosnode')
-        rate = rospy.Rate(20)
-        server = VirtualCapabilityServer()
-        drone = ISSE_Copter_Ros()
-        copter = IsseCopter(server)
-        copter.functionality["arm"] = drone.arm
-        copter.functionality["disarm"] = drone.disarm
-        copter.functionality["SetISSECopterPosition"] = drone.fly_to
-        copter.functionality["GetISSECopterPosition"] = drone.get_position
-        copter.functionality["GetArmingStatus"] = drone.get_arming_status
-        copter.start()
-        signal.signal(signal.SIGTERM, handler)
+    rospy.logwarn("Starting Isse_copter ROS")
+    drone = ISSE_Copter_Ros()
 
-        rospy.logwarn("arm")
-        copter.SetArmingStatus({"SimpleBooleanParameter": True})
-        rospy.logwarn("armed")
-        copter.SetISSECopterPosition({"Position3D": [0.0, 0.0, 1]})
-        copter.SetISSECopterPosition({"Position3D": [0.0, 0.0, 0]})
-        rospy.logwarn("disarm")
-        copter.SetArmingStatus({"SimpleBooleanParameter": False})
-        rospy.logwarn("disarmed")
+    rospy.logwarn("Starting server")
+    server = VirtualCapabilityServer()
 
-        while not rospy.is_shutdown():
-            rate.sleep()
-        copter.join()
-    # Needed for properly closing, when program is being stopped wit a Keyboard Interrupt
-    except KeyboardInterrupt:
-        print("[Main] Received KeyboardInterrupt")
-        server.kill()
-        copter.kill()
+    rospy.logwarn("starting isse_copter semanticplugandplay")
+    copter = IsseCopter(server)
+
+
+
+    copter.functionality["arm"] = drone.arm
+    copter.functionality["disarm"] = drone.disarm
+    copter.functionality["SetISSECopterPosition"] = drone.fly_to
+    copter.functionality["GetISSECopterPosition"] = drone.get_position
+    copter.functionality["GetArmingStatus"] = drone.get_arming_status
+    copter.start()
+    #signal.signal(signal.SIGTERM, handler)
+
+    while not rospy.is_shutdown() and server.connected and copter.running:
+        rate.sleep()
+    server.kill()
+    copter.kill()
+    #copter.join()

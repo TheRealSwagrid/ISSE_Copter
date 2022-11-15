@@ -30,8 +30,8 @@ class ISSE_Copter_Ros:
         while distance > 0.25:
             pos = self.copter.get_position()
             pos = [pos.transform.translation.x, pos.transform.translation.y, pos.transform.translation.z]
-            if i % 10 == 0:
-                rospy.logwarn(f"ISSE_ROS at position:  {pos}, trying to get to  {p}")
+            if i % 100 == 0:
+                #rospy.logwarn(f"ISSE_ROS at position:  {pos}, trying to get to  {p}")
                 i = 0
             distance = math.sqrt((p[0] - pos[0]) ** 2 + (p[1] - pos[1]) ** 2 + (p[2] - pos[2]) ** 2)
             i+=1
@@ -50,8 +50,11 @@ class ISSE_Copter_Ros:
 
     def disarm(self):
         rospy.logwarn(f"ISSE_ROS: Disarming")
-        self.copter.disarm()
-        self.armed = False
+        try:
+            self.copter.disarm()
+            self.armed = False
+        except Exception as e:
+            rospy.logwarn("ERROR: " + repr(e))
 
     def get_arming_status(self):
         return self.armed
@@ -65,7 +68,7 @@ if __name__ == '__main__':
     drone = ISSE_Copter_Ros()
 
     rospy.logwarn("Starting server")
-    server = VirtualCapabilityServer()
+    server = VirtualCapabilityServer(int(rospy.get_param('~semantix_port')))
 
     rospy.logwarn("starting isse_copter semanticplugandplay")
     copter = IsseCopter(server)
@@ -80,7 +83,7 @@ if __name__ == '__main__':
     copter.start()
     #signal.signal(signal.SIGTERM, handler)
 
-    while not rospy.is_shutdown() and server.connected and copter.running:
+    while not rospy.is_shutdown():# and copter.running:
         rate.sleep()
     server.kill()
     copter.kill()

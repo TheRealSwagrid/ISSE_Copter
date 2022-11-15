@@ -1,6 +1,7 @@
 FROM osrf/ros:noetic-desktop-full
-
 SHELL ["/bin/bash", "-c"]
+
+ENV semantix_port=7500
 
 # ROS-Noetic Setup
 RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -29,10 +30,11 @@ RUN cd /ros_ws && source /opt/ros/noetic/setup.bash && catkin build
 #RUN source /ros_ws/devel/setup.bash
 
 #Setup Env
-EXPOSE 9999 3883 11311 14555 14550
+#EXPOSE 9999 3883 11311 14555 14550
 ENTRYPOINT ["/ros_entrypoint.sh"]
 #RUN apt-get update && apt-get install -y  screen
 
 #Start Copter
-CMD source /ros_ws/devel/setup.bash && roslaunch rospkg copter.launch mav_id:=157
+CMD source /ros_ws/devel/setup.bash && roslaunch rospkg copter.launch mav_id:=157 semantix_port:=${semantix_port}
+#${semantix_port}
 #CMD bash

@@ -1,6 +1,7 @@
 <launch>
   	<arg name="mav_id" default="75" />
 	<arg name="vicon_map" value="world"/>
+	<arg name="semantix_port" default="7500"/>
 
     <include file="$(find vrpn_client_ros)/launch/sample.launch">
     		<arg name="server" value="172.20.37.251" />
@@ -15,6 +16,7 @@
 		<param name="target" value="aq_$(arg mav_id)/target"/>
 		<param name="world" value="$(arg vicon_map)"/>
 		<param name="position" value="aq_$(arg mav_id)/position"/>
+		<param name="semantix_port" value="$(arg semantix_port)"/>
 	</node>
 
 </launch>

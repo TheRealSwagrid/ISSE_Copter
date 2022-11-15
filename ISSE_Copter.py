@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import signal
 import sys
+from time import sleep
 
 from AbstractVirtualCapability import AbstractVirtualCapability, VirtualCapabilityServer, formatPrint
 
@@ -27,9 +28,11 @@ class IsseCopter(AbstractVirtualCapability):
 
     def SetISSECopterPosition(self, params: dict) -> dict:
         p = params["Position3D"]
-        print(f"Flying to {p}")
+        formatPrint(self, f"Flying to {p}")
         if self.functionality["SetISSECopterPosition"] is not None:
             self.functionality["SetISSECopterPosition"](p)
+        else:
+            sleep(5)
         return self.GetISSECopterPosition(params)
 
     def GetISSECopterPosition(self, params: dict) -> dict:

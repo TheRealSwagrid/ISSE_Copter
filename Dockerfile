@@ -1,4 +1,4 @@
-FROM osrf/ros:noetic-desktop-full
+FROM ros:noetic
 SHELL ["/bin/bash", "-c"]
 
 ENV semantix_port=7500
@@ -9,7 +9,9 @@ RUN apt-get update && apt-get install -y curl
 RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 #RUN sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN sudo apt-get update
-RUN apt-get update && apt-get install -y ros-noetic-desktop-full python3-rosinstall python3-rosinstall-generator python3-wstool build-essential ros-noetic-mavros python3-rosdep python3-catkin-tools ros-noetic-vrpn-client-ros
+RUN apt-get update && apt-get install -y python3-rosinstall python3-rosinstall-generator python3-wstool build-essential ros-noetic-mavros python3-rosdep python3-catkin-tools ros-noetic-vrpn-client-ros
+#Install required Mavros packages, no included in standard install
+RUN apt-get update && apt-get install -y ros-noetic-angles ros-noetic-tf ros-noetic-urdf ros-noetic-control-toolbox
 RUN apt-get update && apt-get install -y python-is-python3 python3-pip git iputils-ping
 RUN pip install playsound future pyyaml
 RUN sudo /opt/ros/noetic/lib/mavros/install_geographiclib_datasets.sh

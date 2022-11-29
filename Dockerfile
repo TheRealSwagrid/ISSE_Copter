@@ -23,11 +23,14 @@ RUN source ~/.bashrc
 # Add Files
 ADD ros_ws /ros_ws
 COPY protocols /etc
+
+# Build Ros-Pkg and build
+RUN cd /ros_ws && source /opt/ros/noetic/setup.bash && catkin build mavros
+
 COPY ISSE_Copter.py ros_ws/src/rospkg
 COPY AbstractVirtualCapability.py ros_ws/src/rospkg
 COPY requirements /var
 
-# Build Ros-Pkg and build
 RUN cd /ros_ws && source /opt/ros/noetic/setup.bash && catkin build
 #RUN source /ros_ws/devel/setup.bash
 

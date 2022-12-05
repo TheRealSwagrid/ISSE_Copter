@@ -92,7 +92,7 @@ if __name__ == '__main__':
         try:
             trans = tfBuffer.lookup_transform(copter_map, vicon_frame, rospy.Time.now())
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as error:
-            rospy.logerr(error)
+            rospy.logerr(f"ROS makes an Error in vicon_bridge: {error}")
             rate.sleep()
             continue
 

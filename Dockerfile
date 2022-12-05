@@ -25,7 +25,7 @@ ADD ros_ws /ros_ws
 COPY protocols /etc
 
 # Build Ros-Pkg and build
-RUN cd /ros_ws && source /opt/ros/noetic/setup.bash && catkin build mavros mavros_msgs mavros_extras test_mavros -j 2
+RUN cd /ros_ws && source /opt/ros/noetic/setup.bash && catkin build mavros mavros_msgs mavros_extras test_mavros
 
 COPY ISSE_Copter.py ros_ws/src/rospkg
 COPY AbstractVirtualCapability.py ros_ws/src/rospkg

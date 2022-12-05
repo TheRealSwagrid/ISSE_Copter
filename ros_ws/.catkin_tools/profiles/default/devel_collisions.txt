@@ -1,2 +1,0 @@
-/home/rosrunner/Desktop/repos/ISSE_Copter/ros_ws/devel/./cmake.lock 162
-"/home/rosrunner/semanticplugandplay/Semantic Controller/VirtualCapabilities/ISSE_Copter/ros_ws/devel/./cmake.lock" 40

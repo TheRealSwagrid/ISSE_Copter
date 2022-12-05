@@ -90,7 +90,7 @@ if __name__ == '__main__':
         br.sendTransform(t)
 
         try:
-            trans = tfBuffer.lookup_transform(copter_map, vicon_frame, rospy.Time())
+            trans = tfBuffer.lookup_transform(copter_map, vicon_frame, rospy.Time.now())
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as error:
             rospy.logerr(error)
             rate.sleep()

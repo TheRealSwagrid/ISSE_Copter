@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y ros-noetic-angles ros-noetic-tf ros-noe
 RUN apt-get update && apt-get install -y python-is-python3 python3-pip git iputils-ping
 RUN pip install playsound future pyyaml
 RUN sudo /opt/ros/noetic/lib/mavros/install_geographiclib_datasets.sh
+
 #RUN sudo /ros_ws/src/mavros/mavros/scripts/install_geographiclib_datasets.sh
 RUN rosdep update
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc

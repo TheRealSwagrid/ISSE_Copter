@@ -61,6 +61,7 @@ class ISSE_Copter_Ros:
 
 
 if __name__ == '__main__':
+    print("PLS PRINT ME!!!!")
     rospy.init_node('rosnode')
     rate = rospy.Rate(20)
 
@@ -72,7 +73,7 @@ if __name__ == '__main__':
 
     rospy.logwarn("starting isse_copter semanticplugandplay")
     copter = IsseCopter(server)
-
+    print("PLS PRINT ME!!!!")
 
 
     copter.functionality["arm"] = drone.arm
@@ -83,8 +84,7 @@ if __name__ == '__main__':
     copter.start()
     #signal.signal(signal.SIGTERM, handler)
 
-    while not rospy.is_shutdown():# and copter.running:
+    while not rospy.is_shutdown() and server.running:
         rate.sleep()
-    server.kill()
-    copter.kill()
-    #copter.join()
+        rospy.logwarn(f"Server status: {server.running}, {copter}")
+

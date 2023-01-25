@@ -24,7 +24,7 @@ class IsseCopter(AbstractVirtualCapability):
     def GetArmingStatus(self, params: dict):
         if self.functionality["GetArmingStatus"] is not None:
             return self.functionality["GetArmingStatus"]()
-        return False
+        return {"SimpleBooleanParameter": False}
 
     def SetISSECopterPosition(self, params: dict) -> dict:
         p = params["Position3D"]
@@ -48,7 +48,7 @@ class IsseCopter(AbstractVirtualCapability):
     def loop(self):
         pass
 
-"""
+
 if __name__ == '__main__':
     # Needed for properly closing when process is being stopped with SIGTERM signal
     def handler(signum, frame):
@@ -71,4 +71,3 @@ if __name__ == '__main__':
         print("[Main] Received KeyboardInterrupt")
         server.kill()
         listener.kill()
-"""

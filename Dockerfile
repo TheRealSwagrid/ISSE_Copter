@@ -41,6 +41,6 @@ ENTRYPOINT ["/ros_entrypoint.sh"]
 #RUN apt-get update && apt-get install -y  screen
 
 #Start Copter
-CMD source /ros_ws/devel/setup.bash && roslaunch rospkg copter.launch mav_id:=75 semantix_port:=${semantix_port}
+CMD source /ros_ws/devel/setup.bash && roslaunch rospkg copter.launch mav_id:=240 semantix_port:=${semantix_port}
 #${semantix_port}
 #CMD bash

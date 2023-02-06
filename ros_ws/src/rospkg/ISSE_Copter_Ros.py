@@ -23,19 +23,21 @@ class ISSE_Copter_Ros:
         self.copter.fly_to(p[0], p[1], p[2])
         pos = self.copter.get_position()
         pos = [pos.transform.translation.x, pos.transform.translation.y, pos.transform.translation.z]
-        distance = math.sqrt((p[0] - pos[0]) ** 2 + (p[1] - pos[1]) ** 2 + (p[2] - pos[2]) ** 2)
+        distance_x_y = math.sqrt((p[0] - pos[0]) ** 2 + (p[1] - pos[1]) ** 2)
+        distance_z = math.sqrt((p[2] - pos[2]) ** 2)
 
         #rospy.logwarn(f"drone {self.mav_id} flying to {p}")
         i = 0
-        while distance > 0.25:
+        while distance_x_y > 0.15 or distance_z > 0.1:
             pos = self.copter.get_position()
             pos = [pos.transform.translation.x, pos.transform.translation.y, pos.transform.translation.z]
             if i % 100 == 0:
                 #rospy.logwarn(f"ISSE_ROS at position:  {pos}, trying to get to  {p}")
                 i = 0
-            distance = math.sqrt((p[0] - pos[0]) ** 2 + (p[1] - pos[1]) ** 2 + (p[2] - pos[2]) ** 2)
+            distance_x_y = math.sqrt((p[0] - pos[0]) ** 2 + (p[1] - pos[1]) ** 2)
+            distance_z = math.sqrt((p[2] - pos[2]) ** 2)
             i+=1
-        rospy.logwarn(f"drone {self.mav_id} arrived at {p}: {distance}")
+        rospy.logwarn(f"drone {self.mav_id} arrived at {p}: offset: {distance_x_y} in xy and {distance_z} in z")
         #rospy.logwarn(f"drone {self.mav_id} reached {p}")
 
     def get_position(self):
